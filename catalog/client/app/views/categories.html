@@ -1,0 +1,91 @@
+<br>
+
+<ol class="breadcrumb">
+  <li><a href="#/categories" class="active" ng-click="reset()">Categories</a></li>
+  <li ng-if="action.add">NEW CATEGORY</li>
+  <li ng-if="action.edit">EDIT CATEGORY / {{categorySelected.title}}</li>
+</ol>
+
+<div class="row">
+
+  <div class="col-md-3">
+
+    <form class="form-vertical">
+      <div class="form-group">
+        <div class="form-group has-feedback">
+          <label class="control-label">Category</label>
+          <input type="text"
+          class="form-control"
+          placeholder="Find a category..."
+          ng-model="categoryFilter" />
+          <i class="glyphicon glyphicon-search form-control-feedback"></i>
+        </div>
+      </div>
+
+    </form>
+
+    <ul class="list-group">
+      <li class="list-group-item pointer"
+          ng-click="selectCategory(category)"
+          ng-class="{active: category.id === categorySelected.id}"
+          ng-repeat="category in categories | filter:categoryFilter track by $index">
+        {{category.title}}
+      </li>
+    </ul>
+  </div>
+
+  <div class="col-md-9">
+
+    <div class="text-right" ng-hide="isCategoryFormVisible()">
+      <button type="button" class="btn btn-primary" ng-click="addCategory()">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        New Category
+      </button>
+    </div>
+
+    <div class="panel panel-default" ng-show="isCategoryFormVisible()">
+      <div class="panel-heading">
+        <h3 ng-if="action.add" class="panel-title">Add Category</h3>
+        <h3 ng-if="action.edit" class="panel-title">Edit Category</h3>
+      </div>
+      <div class="panel-body">
+
+        <form class="form-vertical category-form col-md-9">
+          <div class="form-group">
+             <label for="title">Title</label>
+             <input type="text" class="form-control" id="title" placeholder="Title" ng-model="categorySelected.title">
+          </div>
+
+          <hr ng-if="action.edit" />
+
+          <div class="text-right" ng-if="action.edit">
+            <a ng-click="openItems()">
+              <button type="button" class="btn btn-primary">
+                Nem Item
+              </button>
+            </a>
+          </div>
+
+          <div class="form-group" ng-if="categorySelected.items.length">
+            <label for="item-list">Items</label>
+            <ul id="item-list">
+              <li class="list-group-item pointer"
+              ng-click="selectItem(item)"
+              ng-repeat="item in categorySelected.items track by $index">
+              {{item.title}}
+            </li>
+            </ul>
+          </div>
+
+          <hr />
+
+          <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+          <button type="button" class="btn btn-danger" ng-click="delete()" ng-if="action.edit">Remove</button>
+          <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+</div>

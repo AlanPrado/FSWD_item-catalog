@@ -1,0 +1,12 @@
+.tmp
+.sass-cache
+.vagrant
+redis-stable.tar.gz
+redis-stable
+
+catalog/client/app/bower_components
+catalog/client/node_modules
+catalog/client/app/dist
+
+*.db
+*.pyc
