@@ -112,12 +112,15 @@ def getItemJSON(categoryId, itemId):
 @app.route('/api/category/<int:categoryId>/item/<int:itemId>', methods=['PUT'])
 def updateItemJSON(categoryId, itemId):
     try:
-        item = repositories["Item"].findById(itemId)
         content = request.json
-        item = CategoryItem(title=content["title"],
-                            categoryId=categoryId,
-                            description=content["description"])
 
+        item = repositories["Item"].findById(itemId)
+        item.id = itemId
+        item.title = content["title"]
+        item.categoryId = categoryId
+        item.description = content["description"]
+
+        repositories["Item"].createOrUpdate(item)
         return jsonify(item.serialize)
     except NoResultFound:
         raise InvalidUsage("Category item %s not found." % itemId)
@@ -127,6 +130,7 @@ def removeItemJSON(categoryId, itemId):
     try:
         item = repositories["Item"].findById(itemId)
         repositories["Item"].delete(item)
+        return Response()
     except NoResultFound:
         raise InvalidUsage("Category item %s not found" % itemId)
 

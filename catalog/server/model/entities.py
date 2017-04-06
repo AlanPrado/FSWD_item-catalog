@@ -22,8 +22,9 @@ class Category(Base):
             "items": []
         }
         for i in self.items:
-            s["items"].append(i)
+            s["items"].append((i.serializeShortVersion))
 
+        print s
         return s
 
 class CategoryItem(Base):
@@ -43,6 +44,13 @@ class CategoryItem(Base):
             "title": self.title,
             "description": self.description,
             "categoryId": self.categoryId,
-            "categoryTitle": self.category.title,
+            #"categoryTitle": self.category.title,
             "createdDate": self.createdDate
+        }
+
+    @property
+    def serializeShortVersion(self):
+        return {
+            "id": self.id,
+            "title": self.title,
         }

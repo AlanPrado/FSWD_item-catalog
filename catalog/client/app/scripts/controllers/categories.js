@@ -28,11 +28,11 @@ angular.module('itemCatalogApp')
 
     var clear = function () {
       $scope.reset();
-      $state.go('categories', {}, {notify: false});
+      $state.go('categories', {}, { notify: false });
     };
 
     $scope.openItems = function () {
-      $state.go('items', { 'categoryId': $scope.categorySelected.id}, {notify: true});
+      $state.go('items', { 'categoryId': $scope.categorySelected.id}, { notify: true });
     };
 
     $scope.cancel = function () {
@@ -77,7 +77,7 @@ angular.module('itemCatalogApp')
       $scope.reset();
       $scope.action.edit = true;
       $scope.categorySelected = angular.copy(category);
-      $state.go('category', { 'categoryId': category.id}, {notify: false});
+      $state.go('category', { 'categoryId': category.id }, { notify: false });
     };
 
     var loadCategories = function () {

@@ -47,7 +47,7 @@ class CategoryItemRepo(GenericRepo):
     _NUMBER_OF_RECENT_ITEMS = 10
 
     def findById(self, itemId):
-        return self.session.query(CategoryItem).filter_by(id=itemId).one()
+        return self.session.query(CategoryItem).filter_by(id=itemId).join(Category, Category.id==CategoryItem.categoryId).one()
 
     def findRecent(self):
         return self.session.query(CategoryItem).limit(self._NUMBER_OF_RECENT_ITEMS)

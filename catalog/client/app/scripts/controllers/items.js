@@ -8,7 +8,7 @@
  * Controller of the itemCatalogApp
  */
 angular.module('itemCatalogApp')
-  .controller('ItemsCtrl', function ($scope, $stateParams, Items, Common) {
+  .controller('ItemsCtrl', function ($scope, $stateParams, $state, Item, Common) {
     $scope.action = { 'add': false, 'edit': false };
     $scope.itemSelected = null;
     $scope.category = null;
@@ -31,7 +31,7 @@ angular.module('itemCatalogApp')
 
     var clear = function () {
       $scope.reset();
-      Common.changeUrl('/categories/' + $scope.category.id + '/items', false);
+      $state.go('items', { 'categoryId': $scope.category.id }, { notify: false });
     };
 
     $scope.cancel = function () {
@@ -39,23 +39,78 @@ angular.module('itemCatalogApp')
     };
 
     $scope.selectItem = function (item) {
-
+      $scope.reset();
+      $scope.action.edit = true;
+      $scope.itemSelected = angular.copy(item);
+      $state.go('item', { 'categoryId': $stateParams.categoryId, 'itemId': item.id }, { notify: false });
     };
 
-    var loadItemsByCategory = function (categoryId) {
-      Items.query({categoryId: categoryId},
+    $scope.save = function () {
+      var item = new Item({ categoryId: $scope.category.id,
+                            title: $scope.itemSelected.title,
+                            description: $scope.itemSelected.description || null });
+      var promise = $scope.action.edit
+          ? item.$update({ itemId: $scope.itemSelected.id, categoryId: $scope.category.id })
+          : item.$save({ categoryId: $scope.category.id });
+
+      var editing = $scope.action.edit;
+
+      promise.then(function (response) {
+        loadItemsByCategory(response.categoryId, response.id, editing);
+
+        if (editing) {
+          Common.alert.setSuccessMessage('Item updated!');
+        } else {
+          Common.alert.setSuccessMessage('Item added!');
+          $scope.selectItem(response);
+        }
+      }, function (response) {
+        Common.alert.setErrorMessage(response.data.message);
+      });
+    };
+
+    $scope.delete = function () {
+      var item = new Item();
+      item.$delete({ itemId: $scope.itemSelected.id, categoryId: $scope.category.id })
+      .then(function (response) {
+        clear();
+        loadItemsByCategory($scope.category.id, undefined, true);
+        Common.alert.setSuccessMessage('Category removed!');
+      }, function (response) {
+        Common.alert.setErrorMessage(response.data.message);
+      });
+    };
+
+    var loadItemsByCategory = function (categoryId, itemId, reset) {
+      var adding = itemId === undefined;
+      return Item.query({categoryId: categoryId},
         function (response) {
           $scope.category = response;
-          if ($stateParams.itemId === undefined) {
-            $scope.action.add = true;
+          if (reset) {
+            $scope.action.add = false;
+            $scope.action.edit = false;
           } else {
-            $scope.action.edit = true;
-            selectItem(response);
+            $scope.action.add = adding;
+            $scope.action.edit = !adding;
+          }
+
+          if ($scope.action.edit) {
+            var items = response.items;
+            var id = Number.parseInt(itemId);
+            for (var i = 0, l = items.length; i < l; i++) {
+              if (items[i].id === id) {
+                $scope.selectItem(items[i]);
+                break;
+              }
+            }
           }
         }, function (response) {
           Common.alert.setErrorMessage(response.data.message);
         });
     };
 
-    loadItemsByCategory($stateParams.categoryId);
+    (function init() {
+      Common.setTag('categories');
+      loadItemsByCategory($stateParams.categoryId, $stateParams.itemId);
+    })();
   });
