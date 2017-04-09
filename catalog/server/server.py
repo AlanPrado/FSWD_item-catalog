@@ -1,13 +1,16 @@
-import os
 import json
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, Response
+import random
+import string
+import os
+
+from flask import Flask, render_template, request, redirect, jsonify, Response, session as login_session
+from flask_cors import CORS, cross_origin
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
-from flask_cors import CORS, cross_origin
 
 from config.config import config
-from model.repository import repositories
 from model.entities import Category, CategoryItem
+from model.repository import repositories
 from exception.exception_helper import InvalidUsage
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -30,6 +33,14 @@ def handle_invalid_usage(error):
 @app.route('/')
 def getIndexHTML():
     return render_template('index.html')
+
+# Create anti-forgery state token
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in xrange(32))
+    login_session['state'] = state
+    return state
 
 ########################################################
 ## Categories ##########################################
@@ -98,8 +109,8 @@ def getCategoryWithItemsJSON(categoryId):
     try:
         category = repositories["Category"].findByIdWithItems(categoryId)
         return jsonify(category.serialize)
-    except:
-        raise InvalidUsage("Category item %s not found." % itemId)
+    except NoResultFound:
+        raise InvalidUsage("Category %s not found." % categoryId)
 
 @app.route('/api/category/<int:categoryId>/item/<int:itemId>')
 def getItemJSON(categoryId, itemId):

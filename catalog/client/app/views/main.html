@@ -9,17 +9,17 @@
     <thead>
       <tr>
         <th class="#">#</th>
-        <th class="recent_category">Category</th>
-        <th class="recent_item">Item</th>
-        <th class="recent_created">Created date</th>
+        <th class="recent-category">Category</th>
+        <th class="recent-item">Item</th>
+        <th class="recent-created">Created At</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td class="recent_category">Mood</td>
-        <td class="recent_item">Happyness</td>
-        <td class="recent_created">03/15/2016 4:30 PM</td>
+      <tr ng-repeat="item in items track by $index">
+        <th scope="row">{{$index + 1}}</th>
+        <td class="recent-category pointer" ng-click="selectCategory(item)">{{item.categoryTitle}}</td>
+        <td class="recent-item pointer" ng-click="selectItem(item)">{{item.title}}</td>
+        <td class="recent-created">{{item.createdDate | date:'yyyy-MM-dd HH:mm:ss Z' }}</td>
       </tr>
     </tbody>
   </table>

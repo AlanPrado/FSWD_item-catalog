@@ -31,8 +31,12 @@ angular.module('itemCatalogApp')
       $state.go('categories', {}, { notify: false });
     };
 
-    $scope.openItems = function () {
-      $state.go('items', { 'categoryId': $scope.categorySelected.id}, { notify: true });
+    $scope.selectItem = function (item) {
+      if (item) {
+        $state.go('item', { 'categoryId': $scope.categorySelected.id, 'itemId': item.id }, { notify: true });
+      } else {
+        $state.go('items', { 'categoryId': $scope.categorySelected.id}, { notify: true });
+      }
     };
 
     $scope.cancel = function () {

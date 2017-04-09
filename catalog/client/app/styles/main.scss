@@ -82,3 +82,18 @@ button a:hover {
   }
 
 }
+
+td {
+  &.recent-category:hover,
+  &.recent-item:hover,
+  &.recent-category:focus,
+  &.recent-item:focus,
+  &.recent-category:active,
+  &.recent-item:active,
+  &.recent-category:visited,
+  &.recent-item:visited {
+    color: $purple;
+    text-decoration: underline;
+    text-decoration-color: $purple;
+  }
+}

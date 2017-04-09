@@ -50,7 +50,7 @@ class CategoryItemRepo(GenericRepo):
         return self.session.query(CategoryItem).filter_by(id=itemId).join(Category, Category.id==CategoryItem.categoryId).one()
 
     def findRecent(self):
-        return self.session.query(CategoryItem).limit(self._NUMBER_OF_RECENT_ITEMS)
+        return self.session.query(CategoryItem).order_by(CategoryItem.createdDate.desc()).limit(self._NUMBER_OF_RECENT_ITEMS)
 
 repositories = {
     "Category": CategoryRepo(),

@@ -14,6 +14,7 @@ angular.module('itemCatalogApp')
                          { categoryId: '@id', itemId: '@id' },
                          {
                            query: { method: 'GET', params: { categoryId: '@id' }, isArray: false, url: prefix + 'category/:categoryId/items' },
+                           recent: { method: 'GET', isArray: true, url: prefix + 'recent' },
                            update: { method:'PUT' }
                          });
     return item;

@@ -44,7 +44,7 @@ class CategoryItem(Base):
             "title": self.title,
             "description": self.description,
             "categoryId": self.categoryId,
-            #"categoryTitle": self.category.title,
+            "categoryTitle": self.category.title,
             "createdDate": self.createdDate
         }
 
