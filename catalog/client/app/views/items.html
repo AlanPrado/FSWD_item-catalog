@@ -1,8 +1,8 @@
 <br>
 
 <ol class="breadcrumb">
-  <li><a ng-href="#/categories" class="active">Categories</a></li>
-  <li><a ng-href="#/category/{{category.id}}" class="active">{{category.title}}</a></li>
+  <li><a ui-sref="categories" class="active">Categories</a></li>
+  <li><a ui-sref="category({categoryId: category.id})" class="active">{{category.title}}</a></li>
   <li class="active">ITEMS</li>
   <li ng-if="action.add">NEW ITEM</li>
   <li ng-if="action.edit">EDIT ITEM / {{itemSelected.title}}</li>

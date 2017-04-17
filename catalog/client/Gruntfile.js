@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       app: require('./bower.json').appPath || 'app',
-      dist: 'dist'
+      dist: '../server/static'
     },
 
     // Watches files for changes and runs tasks based on the changed files
@@ -163,25 +163,29 @@ module.exports = function (grunt) {
       options: {
         sassDir: '<%= yeoman.app %>/styles',
         cssDir: '.tmp/styles',
+        environment: 'development',
         generatedImagesDir: '.tmp/images/generated',
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',
-        fontsDir: '<%= yeoman.app %>/styles/fonts',
-        importPath: '<%= yeoman.app %>/bower_components',
+        fontsDir: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/vendor/assets/fonts/',
+        importPath: '<%= yeoman.app %>/bower_components/',
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
         httpFontsPath: '/styles/fonts',
-        relativeAssets: false,
+        relativeAssets: true,
         assetCacheBuster: false,
         raw: 'Sass::Script::Number.precision = 10\n'
       },
       dist: {
         options: {
+          environment: 'production',
+          fontsDir: '<%= yeoman.app %>/styles/fonts',
           generatedImagesDir: '<%= yeoman.dist %>/images/generated'
         }
       },
       server: {
         options: {
+          environment: 'development',
           debugInfo: true
         }
       }
@@ -209,7 +213,7 @@ module.exports = function (grunt) {
         flow: {
           html: {
             steps: {
-              js: ['concat', 'uglifyjs'],
+              js: ['concat'],
               css: ['cssmin']
             },
             post: {}
@@ -337,8 +341,8 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
-          cwd: '<%= yeoman.app %>/bower_components/bootstrap/dist',
-          src: 'fonts/*',
+          cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/vendor/assets/',
+          src: 'fonts/{,*/}*',
           dest: '<%= yeoman.dist %>'
         }]
       },
@@ -413,10 +417,10 @@ module.exports = function (grunt) {
     'copy:dist',
     'cdnify',
     'cssmin',
-    'uglify',
-    'filerev',
-    'usemin',
-    'htmlmin'
+    //'uglify',
+    //'filerev',
+    'usemin'//,
+    //'htmlmin'
   ]);
 
   grunt.registerTask('default', [

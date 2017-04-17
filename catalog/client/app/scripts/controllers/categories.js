@@ -10,7 +10,7 @@
 angular.module('itemCatalogApp')
   .controller('CategoriesCtrl', function ($scope, $stateParams, $location, $state, Category, Common) {
     $scope.categories = [];
-    $scope.categoryFilter = null;
+    $scope.categoryFilter = '';
     $scope.action = { 'add': false, 'edit': false };
     $scope.categorySelected = null;
 

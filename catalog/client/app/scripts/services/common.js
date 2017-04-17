@@ -8,7 +8,7 @@
  * Service in the itemCatalogApp.
  */
 angular.module('itemCatalogApp')
-  .service('Common', function Common($rootScope, $timeout, $state, $route, $location) {
+  .service('Common', function Common($rootScope, $timeout, $state, Security) {
     // Select tab 'categories' or 'home'
     var setTag = function (tagName) {
       $rootScope.selectedTag = tagName;
