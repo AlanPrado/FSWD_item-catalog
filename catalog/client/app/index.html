@@ -105,11 +105,8 @@
         <script src="scripts/controllers/categories.js"></script>
         <script src="scripts/controllers/items.js"></script>
         <!-- endbuild -->
-    <script src="https://apis.google.com/js/client:platform.js?onload=init"></script>
-    <script>
-        function init() {
-          window.initGapi();
-        }
-    </script>
+    <script async defer src="https://apis.google.com/js/client:platform.js"
+            onload="this.onload=function(){};handleClientLoad()"
+            onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
 </body>
 </html>

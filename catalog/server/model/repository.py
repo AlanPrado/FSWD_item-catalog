@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import IntegrityError
 
 from config.config import config
@@ -11,48 +11,50 @@ class GenericRepo:
     def __create_session__(engine):
         Base.metadata.bind = engine
         DBSession = sessionmaker(bind=engine)
-        return DBSession()
+        return scoped_session(DBSession)
 
     _engine = create_engine(config.DATABASE_URL)
     session = __create_session__.__func__(_engine)
 
-    def createOrUpdate(self, entity):
+    @classmethod
+    def createOrUpdate(cls, entity):
         try:
-            self.session.add(entity)
-            self.session.commit()
+            cls.session.add(entity)
+            cls.session.commit()
         except IntegrityError as e:
-            self.session.rollback()
+            cls.session.rollback()
             raise e
 
-    def delete(self, entity):
+    @classmethod
+    def delete(cls, entity):
         try:
-            self.session.delete(entity)
-            self.session.commit()
+            cls.session.delete(entity)
+            cls.session.commit()
         except IntegrityError as e:
-            self.session.rollback()
+            cls.session.rollback()
             raise e
 
 class CategoryRepo(GenericRepo):
 
-    def findAll(self):
-        return self.session.query(Category).order_by(Category.title).all()
+    @classmethod
+    def findAll(cls):
+        return cls.session.query(Category).order_by(Category.title).all()
 
-    def findById(self, categoryId):
-        return self.session.query(Category).filter_by(id=categoryId).one()
+    @classmethod
+    def findById(cls, categoryId):
+        return cls.session.query(Category).filter_by(id=categoryId).one()
 
-    def findByIdWithItems(self, categoryId):
-        return self.session.query(Category).filter_by(id=categoryId).outerjoin(CategoryItem, CategoryItem.categoryId==Category.id).one()
+    @classmethod
+    def findByIdWithItems(cls, categoryId):
+        return cls.session.query(Category).filter_by(id=categoryId).outerjoin(CategoryItem, CategoryItem.categoryId==Category.id).one()
 
 class CategoryItemRepo(GenericRepo):
     _NUMBER_OF_RECENT_ITEMS = 10
 
-    def findById(self, itemId):
-        return self.session.query(CategoryItem).filter_by(id=itemId).join(Category, Category.id==CategoryItem.categoryId).one()
+    @classmethod
+    def findById(cls, itemId):
+        return cls.session.query(CategoryItem).filter_by(id=itemId).join(Category, Category.id==CategoryItem.categoryId).one()
 
-    def findRecent(self):
-        return self.session.query(CategoryItem).order_by(CategoryItem.createdDate.desc()).limit(self._NUMBER_OF_RECENT_ITEMS)
-
-repositories = {
-    "Category": CategoryRepo(),
-    "Item": CategoryItemRepo()
-}
+    @classmethod
+    def findRecent(cls):
+        return cls.session.query(CategoryItem).order_by(CategoryItem.createdDate.desc()).limit(cls._NUMBER_OF_RECENT_ITEMS)

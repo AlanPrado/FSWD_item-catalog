@@ -24,7 +24,6 @@ class Category(Base):
         for i in self.items:
             s["items"].append((i.serializeShortVersion))
 
-        print s
         return s
 
 class CategoryItem(Base):

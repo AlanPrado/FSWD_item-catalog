@@ -9,25 +9,6 @@
  */
 angular.module('itemCatalogApp')
   .service('Security', function Security($rootScope, $window, $state, $http) {
-    $window.initGapi = function() {
-        function gapiInit() {
-          // load XSRF-TOKEN via ajax request
-          // see https://docs.angularjs.org/api/ng/service/$http#cross-site-request-forgery-xsrf-protection
-          $http({
-            method: 'GET',
-            url: 'http://localhost:5000/api/initialize'
-          }).then(function (response) {
-            return response.data.clientId;
-          }).then(function (clientId) {
-            gapi.load('auth2', function() {
-                gapi.auth2.init({
-                  client_id: clientId
-                });
-              });
-          });
-        }
-        $rootScope.$apply(gapiInit);
-    };
 
     function signInCallback(authResult) {
       if (authResult['code']) {
@@ -37,7 +18,7 @@ angular.module('itemCatalogApp')
         // Send the code to the server
         $.ajax({
           type: 'POST',
-          url: 'http://localhost:5000/gconnect?state=%%STATE%%',
+          url: $rootScope.serverUrl + '/api/auth/gconnect?state=%%STATE%%',
           // Always include an `X-Requested-With` header in every AJAX request,
           // to protect against CSRF attacks.
           headers: {

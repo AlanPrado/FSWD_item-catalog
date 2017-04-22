@@ -8,8 +8,8 @@
  * Service in the itemCatalogApp.
  */
 angular.module('itemCatalogApp')
-  .service('Item', function Item($resource) {
-    var prefix = 'http://localhost:5000/api/';
+  .service('Item', function Item($resource, $rootScope) {
+    var prefix = $rootScope.serverUrl + '/api/';
     var item = $resource(prefix + 'category/:categoryId/item/:itemId',
                          { categoryId: '@id', itemId: '@id' },
                          {
