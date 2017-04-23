@@ -13,6 +13,7 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   </head>
   <body ng-app="itemCatalogApp">
     <!--[if lt IE 7]>
@@ -22,14 +23,21 @@
     <!-- Add your site or application content here -->
     <div class="container">
       <div class="header">
-        <h3 class="text-muted"><img src="/images/catalog_logo.png" alt="logo"></h3>
+        <h3 class="text-muted">
+          <img class="logo" src="/images/catalog_logo.png" alt="logo">
+          <div class="user-info">Olá, Alan</div>
+        </h3>
 
-        <div class="alert" ng-class="{'alert-success': alert.success, 'alert-warning': alert.warning, 'alert-danger': alert.error }"  role="alert" ng-show="alert.isVisible">
+        <div class="alert"
+          ng-class="{'alert-success': alert.success, 'alert-warning': alert.warning, 'alert-danger': alert.error }"
+          role="alert"
+          ng-show="alert.isVisible"
+          ng-cloak>
           <button type="button" class="close" aria-label="Close" ng-click="alert.close()">
             <span aria-hidden="true">×</span>
           </button>
           <strong>{{alert.type}}:</strong>
-          {{alert.message}}
+          <span>{{alert.message}}</span>
         </div>
 
         <ul class="nav nav-tabs">
@@ -97,7 +105,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/services/security.js"></script>
+        <script src="scripts/services/profile.js"></script>
         <script src="scripts/services/common.js"></script>
         <script src="scripts/services/category.js"></script>
         <script src="scripts/services/items.js"></script>
@@ -105,8 +113,6 @@
         <script src="scripts/controllers/categories.js"></script>
         <script src="scripts/controllers/items.js"></script>
         <!-- endbuild -->
-    <script async defer src="https://apis.google.com/js/client:platform.js"
-            onload="this.onload=function(){};handleClientLoad()"
-            onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=init"></script>
 </body>
 </html>

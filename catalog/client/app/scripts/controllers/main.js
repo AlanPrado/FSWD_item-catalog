@@ -8,7 +8,7 @@
  * Controller of the itemCatalogApp
  */
 angular.module('itemCatalogApp')
-  .controller('MainCtrl', function ($scope, $state, $window, Common, Item, Security) {
+  .controller('MainCtrl', function ($scope, $state, $window, Common, Item) {
     $scope.items = [];
 
     var loadItems = function () {

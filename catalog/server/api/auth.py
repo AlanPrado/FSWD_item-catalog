@@ -28,7 +28,7 @@ def initialize():
 def gconnect():
     # Exchange auth code for access token, refresh token, and ID token
     auth_code = request.data
-    credentials = credentials_from_clientsecrets_and_code('client_secret.json', ['email'], auth_code, 'Invalid client id')
+    credentials = credentials_from_clientsecrets_and_code('client_secret.json', ['profile', 'email'], auth_code, 'Invalid client id')
 
     # Call Google API
     #http_auth = credentials.authorize(httplib2.Http())
@@ -37,6 +37,10 @@ def gconnect():
 
     stored_credentials = login_session.get('credentials')
     stored_gplus_id = login_session.get('gplus_id')
+    print credentials.id_token['email']
+    print gplus_id
+    print stored_gplus_id
+    print stored_credentials
 
     if stored_credentials and gplus_id == stored_gplus_id:
         response = make_response(json.dumps('Current user is already connected.'), 200)
@@ -45,35 +49,30 @@ def gconnect():
     login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
-    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
-    answer = requests.get(userinfo_url, params=params)
+    answer = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", params=params)
     data = answer.json()
 
-    new_data = json.dumps({'name': data['name']})
+    login_session['name'] = data['name']
+    login_session['picture'] = data['picture']
 
-    response = make_response(new_data)
-    if config.ENABLE_CORS:
-        response.headers["Access-Control-Allow-Origin"] = config.CORS_URL
-    response.headers["Content-Type"] = "application/json"
-    return response
+    print data['name']
+    print data['picture']
+    return make_response()
 
 @app.before_request
 def enableCSRFProtection():
     """ see https://docs.angularjs.org/api/ng/service/$http#cross-site-request-forgery-xsrf-protection """
 
-    if request.method == 'OPTIONS':
+    if request.method != 'POST' or request.method != 'PUT' or request.method != 'DELETE':
         return
 
     if request.url.endswith('/auth/initialize'):
         return
 
-    print request.cookies
-    print request.headers.get('X-XSRF-TOKEN')
-    print login_session.get('state')
     # If this request does not have `X-XSRF-TOKEN` header, this could be a CSRF
     if login_session.get('state') != request.headers.get('X-XSRF-TOKEN'):
-        raise InvalidUsage('Bad request.', 401)
+        raise InvalidUsage('UNAUTHORIZED.', 401)
 
 @app.after_request
 def enableJSONHijackingProtection(response):

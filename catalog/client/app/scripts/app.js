@@ -19,32 +19,35 @@ angular
     'ui.router'
   ])
   .service('CRSFService', function ($http, $rootScope, $cookies) {
+    // allow session cookie be sent on each request
+    $http.defaults.withCredentials = true;
+
     return {
       refreshToken: function () {
         $cookies.remove('XSRF-TOKEN');
         return $http({
           method: 'GET',
           url: $rootScope.serverUrl + '/api/auth/initialize'
+        }).then(function () {
+            var token = $cookies.get('XSRF-TOKEN');
+            $http.defaults.headers.post["X-XSRF-TOKEN"] = token;
+            $http.defaults.headers.put["X-XSRF-TOKEN"] = token;
+            $http.defaults.headers.delete = { "X-XSRF-TOKEN": token };
         });
       }
     }
   })
-  .run(function ($http, $timeout, $cookies, $rootScope, $window, CRSFService) {
+  .run(function ($http, $rootScope, $window, CRSFService) {
     $rootScope.serverUrl = 'http://localhost:5000';
     $rootScope.clientId = '<your-client-id>';
-    // allow flask session cookie be provided
-    // with each request when working with flask
-    $http.defaults.withCredentials = true;
 
-    CRSFService.refreshToken().then(function () {
-      $http.defaults.headers.common["X-XSRF-TOKEN"] = $cookies.get('XSRF-TOKEN');
-    });
+    CRSFService.refreshToken();
 
     $window.initGapi = function () {
       function init() {
-        gapi.client.init({
+        gapi.auth2.init({
           client_id: $rootScope.clientId,
-          scope: 'email profile'
+          cookiepolicy: 'single_host_origin'
         });
       }
       $rootScope.$apply(init);
@@ -93,10 +96,6 @@ angular
     $stateProvider.state(homeState);
   });
 
-  function handleClientLoad() {
-     gapi.load('client:auth2', init);
-  }
-
   function init () {
-    window.initGapi();
+    gapi.load('auth2', window.initGapi);
   }

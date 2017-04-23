@@ -8,8 +8,8 @@
  * Controller of the itemCatalogApp
  */
 angular.module('itemCatalogApp')
-  .controller('ItemsCtrl', function ($scope, $stateParams, $state, Item, Common) {
-    $scope.action = { 'add': false, 'edit': false };
+  .controller('ItemsCtrl', function ($scope, $stateParams, $state, Item, Common, Profile, $rootScope) {
+    $scope.action = { 'add': false, 'edit': false, 'view': false };
     $scope.itemSelected = null;
     $scope.category = null;
 
@@ -85,12 +85,14 @@ angular.module('itemCatalogApp')
       var adding = itemId === undefined;
       return Item.query({categoryId: categoryId},
         function (response) {
+          $scope.action.view = Profile.isSignedIn();
+
           $scope.category = response;
           if (reset) {
             $scope.action.add = false;
             $scope.action.edit = false;
           } else {
-            $scope.action.add = adding;
+            $scope.action.add = adding && !$scope.action.view;
             $scope.action.edit = !adding;
           }
 

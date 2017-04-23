@@ -61,6 +61,7 @@ class FlaskConfigutation():
         response.status_code = error.status_code
         if config.ENABLE_CORS:
             response.headers["Access-Control-Allow-Origin"] = config.CORS_URL
+            response.headers["Access-Control-Allow-Credentials"] = 'true'
         return response
 
 app = FlaskConfigutation().app

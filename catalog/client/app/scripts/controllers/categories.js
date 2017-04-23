@@ -8,10 +8,10 @@
  * Controller of the itemCatalogApp
  */
 angular.module('itemCatalogApp')
-  .controller('CategoriesCtrl', function ($scope, $stateParams, $location, $state, Category, Common) {
+  .controller('CategoriesCtrl', function ($rootScope, $scope, $stateParams, $location, $state, Category, Common, Profile) {
     $scope.categories = [];
     $scope.categoryFilter = '';
-    $scope.action = { 'add': false, 'edit': false };
+    $scope.action = { 'add': false, 'edit': false, 'view': false };
     $scope.categorySelected = null;
 
     $scope.addCategory = function () {
@@ -41,6 +41,10 @@ angular.module('itemCatalogApp')
 
     $scope.cancel = function () {
       clear();
+    };
+
+    $scope.readOnly = function () {
+      return $scope.action.view;
     };
 
     $scope.save = function () {
@@ -85,7 +89,7 @@ angular.module('itemCatalogApp')
     };
 
     var loadCategories = function () {
-      Category.query(function (response) {
+      return Category.query(function (response) {
         $scope.categories = response;
 
         var categoryId = Number.parseInt($stateParams.categoryId);
@@ -98,6 +102,7 @@ angular.module('itemCatalogApp')
             }
           }
         }
+        $scope.action.view = Profile.isSignedIn();
       }, function (response) {
         Common.alert.setErrorMessage(response.data.message);
       });
