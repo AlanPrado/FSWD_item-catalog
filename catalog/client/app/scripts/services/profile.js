@@ -9,6 +9,9 @@
  */
 angular.module('itemCatalogApp')
   .service('Profile', function Profile($rootScope, $window, $state, $http) {
+    function updateProfile() {
+      // TODO: update profile on load, on sign and on sign out
+    }
 
     function signInCallback(authResult) {
       if (authResult['code']) {
@@ -18,29 +21,9 @@ angular.module('itemCatalogApp')
           $rootScope.serverUrl + '/api/auth/gconnect',
           authResult['code'],
           null
-        ).then(function (response) {
-          debugger;
+        ).then(function () {
+          updateProfile();
         });
-        // debugger;
-        // // Hide the sign-in button now that the user is authorized, for example:
-        // $('#catalog-signin2').hide();
-        // // Send the code to the server
-        // $.ajax({
-        //   type: 'POST',
-        //   url: $rootScope.serverUrl + '/api/auth/gconnect?state=%%STATE%%',
-        //   // Always include an `X-Requested-With` header in every AJAX request,
-        //   // to protect against CSRF attacks.
-        //   headers: {
-        //     'X-Requested-With': 'XMLHttpRequest'
-        //   },
-        //   contentType: 'application/octet-stream; charset=utf-8',
-        //   success: function(result) {
-        //     // Handle or verify the server response.
-        //     debugger;
-        //   },
-        //   processData: false,
-        //   data: authResult['code']
-        // });
       }
     }
 
@@ -60,20 +43,7 @@ angular.module('itemCatalogApp')
       gapi.auth2.getAuthInstance().grantOfflineAccess().then(signInCallback);
     });
 
-    // var renderSignInBtn = function () {
-    //   if (isSignedIn()) {
-    //     // gapi.signin2.render('catalog-signin2', {
-    //     //     'theme': 'dark',
-    //     //     'scope': 'profile email',
-    //     //     'onsuccess': signInCallback,
-    //     //     'client_id': $rootScope.clientId
-    //     //   });
-    //     return true;
-    //   }
-    //   return false;
-    // }
     return {
-      //'renderSignInBtn': renderSignInBtn,
       'isSignedIn': isSignedIn
     }
   });
