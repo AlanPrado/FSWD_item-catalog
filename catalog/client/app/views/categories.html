@@ -3,8 +3,8 @@
 <ol class="breadcrumb">
   <li><a ui-sref="categories" class="active" ng-click="reset()">Categories</a></li>
   <li ng-if="action.add">NEW CATEGORY</li>
-  <li ng-if="action.edit && !action.view">EDIT CATEGORY / {{categorySelected.title}}</li>
-  <li ng-if="action.view && categorySelected">VIEW CATEGORY / {{categorySelected.title}}</li>
+  <li ng-if="action.edit && profile">EDIT CATEGORY / {{categorySelected.title}}</li>
+  <li ng-if="!profile && categorySelected">VIEW CATEGORY / {{categorySelected.title}}</li>
 </ol>
 
 <div class="row">
@@ -37,22 +37,22 @@
 
   <div class="col-md-9">
 
-    <div class="text-right" ng-hide="isCategoryFormVisible()" ng-cloak>
-      <button type="button" class="btn btn-primary" ng-click="addCategory()" ng-hide="action.view">
+    <div class="text-right" ng-hide="isCategoryFormVisible()">
+      <button type="button" class="btn btn-primary" ng-click="addCategory()" ng-show="profile">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         New Category
       </button>
       <div class="catalog-signin2">
-        <div ng-show="action.view"></div>
+        <div ng-hide="profile"></div>
       </div>
     </div>
 
 
     <div class="panel panel-default" ng-show="isCategoryFormVisible()">
       <div class="panel-heading">
-        <h3 ng-if="action.add" class="panel-title">Add Category</h3>
-        <h3 ng-if="action.edit && !action.view" class="panel-title">Edit Category</h3>
-        <h3 ng-if="action.view" class="panel-title">View Category</h3>
+        <h3 ng-if="action.add && profile" class="panel-title">Add Category</h3>
+        <h3 ng-if="action.edit && profile" class="panel-title">Edit Category</h3>
+        <h3 ng-if="!profile" class="panel-title">View Category</h3>
       </div>
       <div class="panel-body">
 
@@ -65,7 +65,7 @@
           <hr ng-if="action.edit" />
 
           <div class="text-right" ng-if="action.edit">
-            <a ng-click="selectItem()" ng-hide="action.view">
+            <a ng-click="selectItem()" ng-show="profile">
               <button type="button" class="btn btn-primary">
                 Nem Item
               </button>
@@ -86,8 +86,8 @@
           <hr />
 
           <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-          <button type="button" class="btn btn-danger" ng-click="delete()" ng-hide="action.view" ng-if="action.edit">Remove</button>
-          <button type="submit" class="btn btn-primary" ng-click="save()" ng-hide="action.view">Save</button>
+          <button type="button" class="btn btn-danger" ng-click="delete()" ng-show="profile" ng-if="action.edit">Remove</button>
+          <button type="submit" class="btn btn-primary" ng-click="save()" ng-show="profile">Save</button>
         </form>
 
       </div>

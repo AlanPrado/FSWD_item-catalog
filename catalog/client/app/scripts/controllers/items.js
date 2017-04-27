@@ -40,7 +40,7 @@ angular.module('itemCatalogApp')
 
     $scope.selectItem = function (item) {
       $scope.reset();
-      $scope.action.edit = true;
+      $scope.action.edit = true  && Profile.isSignedIn();
       $scope.itemSelected = angular.copy(item);
       $state.go('item', { 'categoryId': $stateParams.categoryId, 'itemId': item.id }, { notify: false });
     };
@@ -85,15 +85,13 @@ angular.module('itemCatalogApp')
       var adding = itemId === undefined;
       return Item.query({categoryId: categoryId},
         function (response) {
-          $scope.action.view = Profile.isSignedIn();
-
           $scope.category = response;
           if (reset) {
             $scope.action.add = false;
             $scope.action.edit = false;
           } else {
-            $scope.action.add = adding && !$scope.action.view;
-            $scope.action.edit = !adding;
+            $scope.action.add = adding && Profile.isSignedIn();
+            $scope.action.edit = !adding && Profile.isSignedIn();
           }
 
           if ($scope.action.edit) {

@@ -37,9 +37,9 @@ angular
       }
     }
   })
-  .run(function ($http, $rootScope, $window, CRSFService) {
+  .run(function ($http, $rootScope, $window, CRSFService, Profile) {
     $rootScope.serverUrl = 'http://localhost:5000';
-    $rootScope.clientId = '<your-client-id>';
+    $rootScope.clientId = '53143624297-kt511lr4r3b08ln72f9pel20m11qenml.apps.googleusercontent.com';
 
     CRSFService.refreshToken();
 
@@ -48,6 +48,10 @@ angular
         gapi.auth2.init({
           client_id: $rootScope.clientId,
           cookiepolicy: 'single_host_origin'
+        }).then(function () {
+          if (Profile.isSignedIn()) {
+            Profile.loadProfile();
+          }
         });
       }
       $rootScope.$apply(init);

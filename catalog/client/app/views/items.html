@@ -5,8 +5,8 @@
   <li><a ui-sref="category({categoryId: category.id})" class="active">{{category.title}}</a></li>
   <li class="active">ITEMS</li>
   <li ng-if="action.add">NEW ITEM</li>
-  <li ng-if="action.edit && !action.view">EDIT ITEM / {{itemSelected.title}}</li>
-  <li ng-if="action.view && itemSelected">VIEW ITEM / {{itemSelected.title}}</li>
+  <li ng-if="action.edit && profile">EDIT ITEM / {{itemSelected.title}}</li>
+  <li ng-if="!profile && itemSelected">VIEW ITEM / {{itemSelected.title}}</li>
 </ol>
 
 <div class="row">
@@ -40,12 +40,12 @@
   <div class="col-md-9">
 
     <div class="text-right" ng-hide="isItemFormVisible()">
-      <button type="button" class="btn btn-primary" ng-click="addItem()" ng-show="action.hide">
+      <button type="button" class="btn btn-primary" ng-click="addItem()" ng-show="profile">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         New Item
       </button>
       <div class="catalog-signin2">
-        <div ng-show="action.view"></div>
+        <div ng-hide="profile"></div>
       </div>
     </div>
 
@@ -70,8 +70,8 @@
           <hr />
 
           <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-          <button type="button" class="btn btn-danger" ng-click="delete()" ng-hide="action.view" ng-if="action.edit">Remove</button>
-          <button type="submit" class="btn btn-primary" ng-click="save()" ng-hide="action.view">Save</button>
+          <button type="button" class="btn btn-danger" ng-click="delete()" ng-show="profile" ng-if="action.edit">Remove</button>
+          <button type="submit" class="btn btn-primary" ng-click="save()" ng-show="profile">Save</button>
         </form>
 
       </div>

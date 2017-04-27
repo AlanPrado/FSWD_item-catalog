@@ -30,35 +30,49 @@ def gconnect():
     auth_code = request.data
     credentials = credentials_from_clientsecrets_and_code('client_secret.json', ['profile', 'email'], auth_code, 'Invalid client id')
 
-    # Call Google API
-    #http_auth = credentials.authorize(httplib2.Http())
-
     gplus_id = credentials.id_token['sub']
 
     stored_credentials = login_session.get('credentials')
     stored_gplus_id = login_session.get('gplus_id')
-    print credentials.id_token['email']
-    print gplus_id
-    print stored_gplus_id
-    print stored_credentials
+
+    response = make_response()
+    response.headers['Content-Type'] = 'application/json'
 
     if stored_credentials and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'), 200)
+        response.data = json.dumps('Current user is already connected.')
         return response
 
     login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     params = {'access_token': credentials.access_token, 'alt': 'json'}
-    answer = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", params=params)
+    answer = requests.get("https://www.googleapis.com/oauth2/v2/userinfo", params=params)
     data = answer.json()
 
     login_session['name'] = data['name']
-    login_session['picture'] = data['picture']
+    login_session['picture'] = data['picture'] + "?sz=40"
 
-    print data['name']
-    print data['picture']
-    return make_response()
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+
+    if config.ENABLE_CORS:
+        response.headers['Access-Control-Allow-Origin'] = config.CORS_URL
+
+    return response
+
+@app.route('/api/auth/profile')
+def getProfileJSON():
+    if not login_session.get('credentials'):
+        raise InvalidUsage('UNAUTHORIZED.', 401)
+
+    response = make_response(json.dumps({'name': login_session['name'], 'picture': login_session['picture']}))
+    response.headers['Content-Type'] = 'application/json'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+
+    if config.ENABLE_CORS:
+        response.headers['Access-Control-Allow-Origin'] = config.CORS_URL
+
+    return response
+
 
 @app.before_request
 def enableCSRFProtection():

@@ -6,6 +6,10 @@ $icon-font-path: '../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 $purple: #a55c9b;
 $pink: #da3ec5;
 $darkpurple: #96508c;
@@ -111,9 +115,21 @@ td {
 }
 
 .user-info {
+  align-items: center;
   color: $white;
+  display: flex;
   float: right;
   line-height: 4em;
+
+  img {
+    border-radius: 50%;
+    margin-left: 15px;
+  }
+
+  p {
+    font-size: 1.15em;
+    margin: 0;
+  }
 }
 
 .catalog-signin2 {
@@ -142,4 +158,9 @@ td {
       background-image: url('/images/google_signin_buttons/web/1x/btn_google_signin_dark_disabled_web.png');
     }
   }
+}
+
+.headers {
+  display: flex;
+  justify-content: space-between;
 }

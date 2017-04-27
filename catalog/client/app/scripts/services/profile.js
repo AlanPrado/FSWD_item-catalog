@@ -9,8 +9,11 @@
  */
 angular.module('itemCatalogApp')
   .service('Profile', function Profile($rootScope, $window, $state, $http) {
-    function updateProfile() {
-      // TODO: update profile on load, on sign and on sign out
+
+    function loadProfile() {
+      $http.get($rootScope.serverUrl + '/api/auth/profile').then(function (response) {
+        $rootScope.profile = response.data;
+      });
     }
 
     function signInCallback(authResult) {
@@ -22,28 +25,39 @@ angular.module('itemCatalogApp')
           authResult['code'],
           null
         ).then(function () {
-          updateProfile();
+          loadProfile();
         });
       }
     }
 
+    function hasAuthInstance() {
+      $window.auth2 = gapi.auth2.getAuthInstance();
+      return $window.auth2;
+    }
+
     function signOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        $('#catalog-signin2').show();
-      });
+      if (hasAuthInstance()) {
+        auth2.signOut().then(function () {
+          $('.catalog-signin2').show();
+          $rootScope.profile = null;
+        });
+      }
     }
 
-    var isSignedIn = function() {
-      var auth2 = gapi.auth2;
-      return auth2 && !auth2.getAuthInstance().isSignedIn.get();
+    function isSignedIn() {
+      if (hasAuthInstance()) {
+        return auth2.isSignedIn.get();
+      }
     }
 
-    $('body .catalog-signin2').on('click', 'div', function () {
-      gapi.auth2.getAuthInstance().grantOfflineAccess().then(signInCallback);
+    $('body').on('click', '.catalog-signin2 div', function () {
+      if (hasAuthInstance()) {
+        auth2.grantOfflineAccess().then(signInCallback);
+      }
     });
 
     return {
-      'isSignedIn': isSignedIn
+      'isSignedIn': isSignedIn,
+      'loadProfile': loadProfile
     }
   });

@@ -1,11 +1,15 @@
 import os
 import json
+import redis
 
 from flask_cors import CORS, cross_origin
 from flask import Flask, jsonify
 
 from config import config
 from exception.exception_helper import InvalidUsage
+
+from flask_kvsession import KVSessionExtension
+from simplekv.memory.redisstore import RedisStore
 
 class FlaskConfigutation():
 
@@ -44,15 +48,16 @@ class FlaskConfigutation():
                      static_folder=template_dir,
                      static_url_path="")
 
+    @staticmethod
+    def __configureKSession__(app):
+        """ see http://pythonhosted.org/Flask-KVSession/ """
+        store = RedisStore(redis.StrictRedis())
+        KVSessionExtension(store, app)
+
     app = __initialize__.__func__()
+    __configureKSession__.__func__(app)
     __enableCors__.__func__(app)
     __configureJinja__.__func__(app)
-
-    @staticmethod
-    def getClientId():
-        # TODO: remove
-        client_secret = open('../client_secret.json', 'r').read()
-        return json.loads(client_secret)['web']['client_id']
 
     @staticmethod
     @app.errorhandler(InvalidUsage)
