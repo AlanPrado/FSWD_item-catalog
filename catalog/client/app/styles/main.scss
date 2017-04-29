@@ -120,16 +120,25 @@ td {
   display: flex;
   float: right;
   line-height: 4em;
+  position: relative;
 
   img {
     border-radius: 50%;
-    margin-left: 15px;
+    margin-left: 10px;
   }
 
   p {
     font-size: 1.15em;
     margin: 0;
   }
+
+  .signout {
+    position: absolute;
+    text-decoration: underline;
+    top: 0;
+    right: 0;
+  }
+
 }
 
 .catalog-signin2 {

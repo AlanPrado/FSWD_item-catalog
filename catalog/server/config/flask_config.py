@@ -55,8 +55,8 @@ class FlaskConfigutation():
         KVSessionExtension(store, app)
 
     app = __initialize__.__func__()
-    __configureKSession__.__func__(app)
     __enableCors__.__func__(app)
+    __configureKSession__.__func__(app)
     __configureJinja__.__func__(app)
 
     @staticmethod

@@ -11,7 +11,7 @@ angular.module('itemCatalogApp')
   .controller('CategoriesCtrl', function ($rootScope, $scope, $stateParams, $location, $state, Category, Common, Profile) {
     $scope.categories = [];
     $scope.categoryFilter = '';
-    $scope.action = { 'add': false, 'edit': false };
+    $scope.action = { 'add': false, 'edit': false, 'view': false };
     $scope.categorySelected = null;
 
     $scope.addCategory = function () {
@@ -23,6 +23,7 @@ angular.module('itemCatalogApp')
     $scope.reset = function () {
       $scope.action.add = false;
       $scope.action.edit = false;
+      $scope.action.view = false;
       $scope.categorySelected = null;
     };
 
@@ -74,12 +75,21 @@ angular.module('itemCatalogApp')
     };
 
     $scope.isCategoryFormVisible = function () {
-      return $scope.action.add || $scope.action.edit;
+      return $scope.action.add || $scope.action.edit || $scope.action.view;
+    };
+
+    $scope.isOwner = function () {
+      if ($rootScope.profile && $scope.categorySelected) {
+        return $rootScope.profile.email === $scope.categorySelected.author;
+      }
+      return false;
     };
 
     $scope.selectCategory = function (category) {
       $scope.reset();
-      $scope.action.edit = true  && Profile.isSignedIn();
+      var isSignedIn = Profile.isSignedIn();
+      $scope.action.edit = true && isSignedIn;
+      $scope.action.view = !isSignedIn;
       $scope.categorySelected = angular.copy(category);
       $state.go('category', { 'categoryId': category.id }, { notify: false });
     };

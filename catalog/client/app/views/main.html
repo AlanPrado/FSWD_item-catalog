@@ -12,6 +12,7 @@
         <th class="recent-category">Category</th>
         <th class="recent-item">Item</th>
         <th class="recent-created">Created At</th>
+        <th class="author">Author</th>
       </tr>
     </thead>
     <tbody>
@@ -19,7 +20,8 @@
         <th scope="row">{{$index + 1}}</th>
         <td class="recent-category pointer" ng-click="selectCategory(item)">{{item.categoryTitle}}</td>
         <td class="recent-item pointer" ng-click="selectItem(item)">{{item.title}}</td>
-        <td class="recent-created">{{item.createdDate | date:'yyyy-MM-dd HH:mm:ss Z' }}</td>
+        <td class="recent-created">{{item.createdDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+        <td class="author">{{item.author}}</td>
       </tr>
     </tbody>
   </table>

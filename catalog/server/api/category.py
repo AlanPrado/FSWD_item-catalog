@@ -1,6 +1,6 @@
 import json
 
-from flask import request, make_response, jsonify
+from flask import request, make_response, jsonify, session as loginSession
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
@@ -14,7 +14,8 @@ from exception.exception_helper import InvalidUsage
 def addCategoryJSON():
     content = request.json
     try:
-        category = Category(title=content["title"])
+        category = Category(title=content["title"],
+                            userId=loginSession.get('user_id'))
         CategoryRepo.createOrUpdate(category)
         return jsonify(category.serialize)
     except IntegrityError:

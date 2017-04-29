@@ -20,12 +20,13 @@ angular.module('itemCatalogApp')
     };
 
     $scope.isItemFormVisible = function () {
-      return $scope.action.add || $scope.action.edit;
+      return $scope.action.add || $scope.action.edit || $scope.action.view;
     };
 
     $scope.reset = function () {
       $scope.action.add = false;
       $scope.action.edit = false;
+      $scope.action.view = false;
       $scope.itemSelected = null;
     };
 
@@ -40,7 +41,9 @@ angular.module('itemCatalogApp')
 
     $scope.selectItem = function (item) {
       $scope.reset();
-      $scope.action.edit = true  && Profile.isSignedIn();
+      var isSignedIn = Profile.isSignedIn();
+      $scope.action.edit = true  && isSignedIn;
+      $scope.action.view = !isSignedIn;
       $scope.itemSelected = angular.copy(item);
       $state.go('item', { 'categoryId': $stateParams.categoryId, 'itemId': item.id }, { notify: false });
     };
@@ -69,6 +72,13 @@ angular.module('itemCatalogApp')
       });
     };
 
+    $scope.isOwner = function () {
+      if ($rootScope.profile && $scope.category) {
+        return $rootScope.profile.email === $scope.category.author;
+      }
+      return false;
+    };
+
     $scope.delete = function () {
       var item = new Item();
       item.$delete({ itemId: $scope.itemSelected.id, categoryId: $scope.category.id })
@@ -89,12 +99,15 @@ angular.module('itemCatalogApp')
           if (reset) {
             $scope.action.add = false;
             $scope.action.edit = false;
+            $scope.action.view = false;
           } else {
-            $scope.action.add = adding && Profile.isSignedIn();
-            $scope.action.edit = !adding && Profile.isSignedIn();
+            var isSignedIn = Profile.isSignedIn()
+            $scope.action.add = adding && isSignedIn;
+            $scope.action.edit = !adding && isSignedIn;
+            $scope.action.view = !isSignedIn;
           }
 
-          if ($scope.action.edit) {
+          if (!$scope.action.add) {
             var items = response.items;
             var id = Number.parseInt(itemId);
             for (var i = 0, l = items.length; i < l; i++) {

@@ -1,6 +1,6 @@
 import json
 
-from flask import request, make_response, jsonify
+from flask import request, make_response, jsonify, session as loginSession
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
@@ -14,6 +14,7 @@ from exception.exception_helper import InvalidUsage
 def addItemJSON(categoryId):
     content = request.json
     item = CategoryItem(title=content["title"],
+                        userId=loginSession.get('user_id'),
                         categoryId=categoryId,
                         description=content["description"])
 

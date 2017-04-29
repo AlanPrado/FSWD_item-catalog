@@ -28,8 +28,10 @@
             <img class="logo" src="/images/catalog_logo.png" alt="logo">
           </h3>
           <div class="text-center user-info ng-cloak" ng-show="profile">
+            <br>
             <p>Welcome, {{profile.name}}</p>
             <img ng-src="{{profile.picture}}" alt="profile photo">
+            <span class="signout pointer" ng-click="showSingOutModal()" type="button" name="button">Sign out</span>
           </div>
         </div>
 
@@ -63,6 +65,19 @@
       </div>
     </div>
 
+    <div class="signout-modal modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p>Do you really want to log out?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="cancel btn btn-default" ng-click="cancelSignout()">Cancel</button>
+            <button type="button" class="signout btn btn-primary" ng-click="signout()">Logout</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
