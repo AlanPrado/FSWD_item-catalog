@@ -38,8 +38,15 @@ angular
     }
   })
   .run(function ($http, $rootScope, $window, CRSFService, Profile) {
-    $rootScope.serverUrl = 'http://localhost:5000';
-    $rootScope.clientId = '53143624297-kt511lr4r3b08ln72f9pel20m11qenml.apps.googleusercontent.com';
+    // if app is running in another port different from server,
+    // replace <your-client-id> for your google client id
+    // and <your-server-address> for the current port of your backend server
+    // For debug porposes, consider run grunt serve.
+    // For that, remeber you need to install grunt client
+    var clientId = angular.element("head meta[name='google-signin-client_id']").attr('content');
+    var serverAddress = angular.element("head meta[name='server-address']").attr('content');
+    $rootScope.serverUrl = serverAddress === '%%SERVER_ADDRESS%%' ? '<your-server-address>' : serverAddress;
+    $rootScope.clientId = clientId === '%%CLIENT_ID%%' ? '<your-client-id>' : clientId;
 
     CRSFService.refreshToken();
 

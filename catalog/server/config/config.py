@@ -14,5 +14,6 @@ class ConfigDev(Config):
 class ConfigProd(Config):
     SECRET_KEY = "my_prod_secret_key"
     DEBUG = False
+    CORS_URL = ''
 
-config = ConfigDev()
+config = ConfigProd()

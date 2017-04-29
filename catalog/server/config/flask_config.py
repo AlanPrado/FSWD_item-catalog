@@ -3,7 +3,7 @@ import json
 import redis
 
 from flask_cors import CORS, cross_origin
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 from config import config
 from exception.exception_helper import InvalidUsage
@@ -42,7 +42,7 @@ class FlaskConfigutation():
     @staticmethod
     def __initialize__():
         base_dir = os.path.abspath(os.path.dirname(__file__))
-        template_dir = os.path.join(base_dir, 'static')
+        template_dir = os.path.join(base_dir, '../static')
         return Flask(__name__,
                      template_folder=template_dir,
                      static_folder=template_dir,
@@ -70,3 +70,10 @@ class FlaskConfigutation():
         return response
 
 app = FlaskConfigutation().app
+CLIENT_ID = json.loads(open('client_secret.json', 'r').read())['web']['client_id']
+
+@app.route('/')
+def indexHTML():
+    return render_template('index.html',
+                           CLIENT_ID=CLIENT_ID,
+                           SERVER_ADDRESS=config.CORS_URL)
