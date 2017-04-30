@@ -67,5 +67,6 @@ class CategoryItem(Base):
     def serializeShortVersion(self):
         return {
             "id": self.id,
-            "title": self.title
+            "title": self.title,
+            "description": self.description
         }

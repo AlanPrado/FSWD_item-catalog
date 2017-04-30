@@ -14,6 +14,9 @@ from exception.exception_helper import InvalidUsage
 def addCategoryJSON():
     content = request.json
     try:
+        if not content["title"]:
+            raise InvalidUsage("Title is a required field")
+
         category = Category(title=content["title"],
                             userId=loginSession.get('user_id'))
         CategoryRepo.createOrUpdate(category)
@@ -33,6 +36,9 @@ def getCategoryJSON(categoryId):
 def updateCategoryJSON(categoryId):
     content = request.json
     try:
+        if not content["title"]:
+            raise InvalidUsage("Title is a required field")
+
         category = CategoryRepo.findById(categoryId)
         category.title = content["title"]
         CategoryRepo.createOrUpdate(category)

@@ -13,6 +13,9 @@ from exception.exception_helper import InvalidUsage
 @app.route('/api/category/<int:categoryId>/item', methods=['POST'])
 def addItemJSON(categoryId):
     content = request.json
+    if not content["title"]:
+        raise InvalidUsage("Title is a required field")
+
     item = CategoryItem(title=content["title"],
                         userId=loginSession.get('user_id'),
                         categoryId=categoryId,
@@ -41,6 +44,9 @@ def getItemJSON(categoryId, itemId):
 def updateItemJSON(categoryId, itemId):
     try:
         content = request.json
+
+        if not content["title"]:
+            raise InvalidUsage("Title is a required field")
 
         item = CategoryItemRepo.findById(itemId)
         item.id = itemId
