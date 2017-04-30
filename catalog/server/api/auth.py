@@ -106,7 +106,7 @@ def gconnect():
                    providerId=providerId,
                    user=user)
 
-    return jsonify('Successfully disconnected.')
+    return jsonify('Successfully connected.')
 
 @app.route('/api/auth/profile')
 def getProfileJSON():

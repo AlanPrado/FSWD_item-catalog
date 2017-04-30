@@ -21,7 +21,7 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(250), nullable=False)
     userId = Column(Integer, ForeignKey('user.id'), nullable=False)
-    items = relationship('CategoryItem', backref='categoryItem', lazy='dynamic')
+    items = relationship('CategoryItem', backref='categoryItem', lazy='dynamic', cascade="delete, delete-orphan")
     user = relationship(User)
 
     __table_args__ = (UniqueConstraint('title', name='uk_cat_title'),)
