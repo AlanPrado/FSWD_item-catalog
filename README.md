@@ -20,8 +20,7 @@ For that is necessary to
 - And replace the content of the [client_secret.json](https://github.com/AlanPrado/item-catalog/blob/master/catalog/server/client_secret.json) file for your credentials.
 
 Finally run: `python /vagrant/catalog/server.py` to launch.
-
-You can, also, install a grunt client
+The project should be running at http://localhost:5000/.
 
 ### What's included
 
