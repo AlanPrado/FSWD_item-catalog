@@ -138,8 +138,7 @@ angular.module('itemCatalogApp')
           authResult['code'],
           null
         ).then(function () {
-          $window.auth2 = gapi.auth2;
-          loadProfile();
+          $window.location.reload();
         });
       }
     }
@@ -170,13 +169,14 @@ angular.module('itemCatalogApp')
         }).then(function () {
           $rootScope.profile = null;
           hideSignOutModal();
+          $window.location.reload();
         });
       }
     }
 
     function isSignedIn() {
       if (hasAuthInstance()) {
-        return auth2.isSignedIn.get();
+        return auth2.isSignedIn.get() || $rootScope.profile !== undefined;
       }
     }
 
@@ -425,7 +425,7 @@ angular.module('itemCatalogApp')
 
     $scope.isOwner = function () {
       if ($rootScope.profile && $scope.categorySelected) {
-        return $rootScope.profile.email === $scope.categorySelected.author;
+        return $rootScope.profile.email === $scope.categorySelected.author && $scope.categorySelected.author !== undefined;
       }
       return false;
     };

@@ -80,7 +80,7 @@ angular.module('itemCatalogApp')
 
     $scope.isOwner = function () {
       if ($rootScope.profile && $scope.categorySelected) {
-        return $rootScope.profile.email === $scope.categorySelected.author;
+        return $rootScope.profile.email === $scope.categorySelected.author && $scope.categorySelected.author !== undefined;
       }
       return false;
     };

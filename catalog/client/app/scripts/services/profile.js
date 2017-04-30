@@ -25,8 +25,7 @@ angular.module('itemCatalogApp')
           authResult['code'],
           null
         ).then(function () {
-          $window.auth2 = gapi.auth2;
-          loadProfile();
+          $window.location.reload();
         });
       }
     }
@@ -57,13 +56,14 @@ angular.module('itemCatalogApp')
         }).then(function () {
           $rootScope.profile = null;
           hideSignOutModal();
+          $window.location.reload();
         });
       }
     }
 
     function isSignedIn() {
       if (hasAuthInstance()) {
-        return auth2.isSignedIn.get();
+        return auth2.isSignedIn.get() || $rootScope.profile !== undefined;
       }
     }
 
