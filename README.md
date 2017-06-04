@@ -1,4 +1,4 @@
-#Project: Item Catalog
+# Project: Item Catalog
 
 Build a web application that manage categories and categories items.
 
