@@ -1,5 +1,5 @@
 class Config:
-    DATABASE_URL = 'sqlite:////vagrant/catalog/database/catalog.db'
+    DATABASE_URL = 'postgresql://grader:@127.0.0.1/item-catalog-db'
     SECRET_KEY = "my_secret_key"
     DEBUG = True
     ENABLE_CORS = True

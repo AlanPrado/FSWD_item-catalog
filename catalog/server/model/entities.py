@@ -1,9 +1,10 @@
 import datetime
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, UniqueConstraint
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+db = SQLAlchemy()
+Base = db.Model
 
 class User(Base):
     __tablename__ = 'user'

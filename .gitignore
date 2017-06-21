@@ -7,6 +7,7 @@ redis-stable
 catalog/client/app/bower_components
 catalog/client/node_modules
 catalog/client/app/dist
+catalog/server/migrations/
 
 *.db
 *.pyc
