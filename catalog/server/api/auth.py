@@ -84,7 +84,7 @@ def disconnect():
 @app.route('/api/auth/gconnect', methods=['POST'])
 def gconnect():
     # Exchange auth code for access token, refresh token, and ID token
-    credentials = credentials_from_clientsecrets_and_code('client_secret.json',
+    credentials = credentials_from_clientsecrets_and_code(config.SECRETS_PATH,
                                                           ['profile', 'email'],
                                                           request.data, # one time token
                                                           'Invalid client id')

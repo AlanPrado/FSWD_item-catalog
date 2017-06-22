@@ -70,7 +70,8 @@ class FlaskConfigutation():
         return response
 
 app = FlaskConfigutation().app
-CLIENT_ID = json.loads(open(os.path.dirname(os.path.dirname(__file__)) +  '/client_secret.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(open(config.SECRETS_PATH, 'r').read())['web']['client_id']
+
 
 @app.route('/')
 def indexHTML():
